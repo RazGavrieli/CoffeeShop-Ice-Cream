@@ -8,8 +8,11 @@ namespace DataProtocol
         Peanuts,
         Maple
     }
-    public class Extra : Ingredient
+    public class Extra 
     {
+        public Extra(ExtraTaste taste) {
+            this.ExtraTaste = taste;
+        }
         public ExtraTaste ExtraTaste { get; set; }
     }
 }

@@ -18,7 +18,14 @@ namespace DataProtocol {
         GiveMe100
     }
 
-    public class IceCreamBall : Ingredient {
+    public class IceCreamBall
+    {
+        public IceCreamBall(Taste taste)
+        {
+            this.Taste = taste;
+        }
         public Taste Taste { get; set; }
+
+
     }
 }
