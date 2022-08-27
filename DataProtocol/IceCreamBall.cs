@@ -3,7 +3,6 @@
 
 
 namespace DataProtocol {
-
     public enum Taste
     {
         Chocolate,
