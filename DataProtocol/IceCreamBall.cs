@@ -18,7 +18,7 @@ namespace DataProtocol {
         GiveMe100
     }
 
-    class IceCreamBall : Ingredient {
+    public class IceCreamBall : Ingredient {
         public Taste Taste { get; set; }
     }
 }
