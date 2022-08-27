@@ -69,7 +69,7 @@ namespace DAL
                             {
                                 ResultSale.Id = reader.GetInt32(1);
                                 ResultSale.date = reader.GetString(2);
-                                ResultSale.totalPrice = reader.GetFloat(3);
+                                ResultSale.TotalPrice = reader.GetFloat(3);
                             }
                             
                         }
