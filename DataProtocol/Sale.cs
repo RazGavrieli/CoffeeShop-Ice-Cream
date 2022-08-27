@@ -26,6 +26,9 @@ namespace DataProtocol {
             CupType = CupType.Regular;
             date = "48.13.2053";
             Balls = new List<IceCreamBall>();
+            //By Default we cannot have less then 0 balls.
+            
+            Balls.Add(new IceCreamBall(Taste.Cannabis));
             ExtrasOnBalls = new List<Extra>();
             TotalPrice = 0;
         }
@@ -83,11 +86,107 @@ namespace DataProtocol {
         }
         private bool CheckForValidOrder() 
         {
+            //Cannot have 0 balls in order.
+            if (Balls.Count == 0) 
+            {
+                return false;
+            }
+            switch (this.CupType){
+                /**
+                 * Case 1: regular cup:
+                 * 1.amount of icecream balls: 1-3
+                 * 2.if there is Extras-> we must have 2 balls or more
+                 * 3.chocolate balls taste->hot chocolate extra invalid
+                 * 4.mekupelet balls taste->hot chocolate extra invalid
+                 * 5.vanille balls taste->maple extra invalid
+                 */
+                case CupType.Regular:
+                    if (Balls.Count > 3) 
+                    {
+                        return false;
+                    }
+                    if (Balls.Count < 2 && ExtrasOnBalls.Count != 0) 
+                    {
+                        return false;
+                    }
+                    for (int i = 0; i < Balls.Count; i++) 
+                    {
+                        if (Balls[i].Taste == Taste.Chocolate || Balls[i].Taste == Taste.Mekupelet) 
+                        {
+                            for (int k = 0; k < ExtrasOnBalls.Count; k++) 
+                            {
+                                if (ExtrasOnBalls[k].ExtraTaste == ExtraTaste.HotChocolate) 
+                                {
+                                    return false;
+                                }
+                            }
+                        }
+
+                        if (Balls[i].Taste == Taste.Vanille) 
+                        {
+                            for (int k = 0; k < ExtrasOnBalls.Count; k++)
+                            {
+                                if (ExtrasOnBalls[k].ExtraTaste == ExtraTaste.Maple)
+                                {
+                                    return false;
+                                }
+                            }
+                        }
+                    }
+                    break;
+
+                    /**
+                     * Case 2: Speciel cup type
+                     * 1.Balls count: 1-3
+                     */
+                case CupType.Special:
+                    if (Balls.Count > 3)
+                    {
+                        return false;
+                    }
+                    break;
+
+                /**
+                 * Case 3: Box cup type
+                 * 
+                 */
+                case CupType.Box:
+                    return true;
+                    break;
+            }
             return true;
         }
         private void UpdateTotalPrice() 
         {
-            this.TotalPrice = 0;
+
+            /**
+             * if we have 1 ball price is 7$,
+             * else price is 6$ per ball.
+             * for Speciel cup add 2$,
+             * for Box cup add 5$.
+             * Extras price not writen correct, my guees is 2$ per extra.
+             **/
+
+            TotalPrice = 0;
+            if (Balls.Count == 1)
+            {
+                TotalPrice = 7;
+            }
+            else 
+            {
+                TotalPrice = Balls.Count * 6;
+            }
+
+            if (this.CupType == CupType.Special) 
+            {
+                TotalPrice += 2;
+            }
+            else if (this.CupType == CupType.Box)
+            {
+                TotalPrice += 5;
+            }
+            TotalPrice += (ExtrasOnBalls.Count * 2);
+
         }
     }
 }

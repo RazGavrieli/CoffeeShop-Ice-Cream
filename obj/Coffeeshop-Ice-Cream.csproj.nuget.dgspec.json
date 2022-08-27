@@ -1,20 +1,24 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\razga\\Desktop\\CoffeeShop-Ice-Cream\\Coffeeshop-Ice-Cream.csproj": {}
+    "C:\\Users\\lucas\\source\\repos\\CoffeeShop-Ice-Cream\\Coffeeshop-Ice-Cream.csproj": {}
   },
   "projects": {
-    "C:\\Users\\razga\\Desktop\\CoffeeShop-Ice-Cream\\Coffeeshop-Ice-Cream.csproj": {
+    "C:\\Users\\lucas\\source\\repos\\CoffeeShop-Ice-Cream\\Coffeeshop-Ice-Cream.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\razga\\Desktop\\CoffeeShop-Ice-Cream\\Coffeeshop-Ice-Cream.csproj",
+        "projectUniqueName": "C:\\Users\\lucas\\source\\repos\\CoffeeShop-Ice-Cream\\Coffeeshop-Ice-Cream.csproj",
         "projectName": "Coffeeshop-Ice-Cream",
-        "projectPath": "C:\\Users\\razga\\Desktop\\CoffeeShop-Ice-Cream\\Coffeeshop-Ice-Cream.csproj",
-        "packagesPath": "C:\\Users\\razga\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\razga\\Desktop\\CoffeeShop-Ice-Cream\\obj\\",
+        "projectPath": "C:\\Users\\lucas\\source\\repos\\CoffeeShop-Ice-Cream\\Coffeeshop-Ice-Cream.csproj",
+        "packagesPath": "C:\\Users\\lucas\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\lucas\\source\\repos\\CoffeeShop-Ice-Cream\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "C:\\Users\\razga\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\lucas\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
