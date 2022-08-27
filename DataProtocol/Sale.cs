@@ -15,10 +15,10 @@ namespace DataProtocol {
         public CupType CupType { get; set; }
         public string date { get; set; }
         public List<IceCreamBall> Balls { get; set; }
-        List<Extra> ExtrasOnBalls { get; set; }
+        public List<Extra> ExtrasOnBalls { get; set; }
 
         public float TotalPrice { get; set; }
-        Sale() {
+        public Sale() {
             /**Setting up uniqe ID for each Sale*/
             Id = IDCount;
             IDCount++;
@@ -29,7 +29,7 @@ namespace DataProtocol {
             ExtrasOnBalls = new List<Extra>();
             TotalPrice = 0;
         }
-        Sale(List<IceCreamBall> Balls, List<Extra> Extras, CupType cup, string date ) {
+        public Sale(List<IceCreamBall> Balls, List<Extra> Extras, CupType cup, string date ) {
             /**Setting up uniqe ID for each Sale*/
             Id = IDCount;
             IDCount++;
@@ -81,11 +81,11 @@ namespace DataProtocol {
             }
 
         }
-        bool CheckForValidOrder() 
+        private bool CheckForValidOrder() 
         {
             return true;
         }
-        void UpdateTotalPrice() 
+        private void UpdateTotalPrice() 
         {
             this.TotalPrice = 0;
         }
