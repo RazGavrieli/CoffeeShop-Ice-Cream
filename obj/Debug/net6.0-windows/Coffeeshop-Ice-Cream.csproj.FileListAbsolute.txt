@@ -1,0 +1,15 @@
+C:\Users\razga\Desktop\CoffeeShop-Ice-Cream\obj\Debug\net6.0-windows\Coffeeshop-Ice-Cream.csproj.AssemblyReference.cache
+C:\Users\razga\Desktop\CoffeeShop-Ice-Cream\obj\Debug\net6.0-windows\Coffeeshop-Ice-Cream.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\razga\Desktop\CoffeeShop-Ice-Cream\obj\Debug\net6.0-windows\Coffeeshop-Ice-Cream.AssemblyInfoInputs.cache
+C:\Users\razga\Desktop\CoffeeShop-Ice-Cream\obj\Debug\net6.0-windows\Coffeeshop-Ice-Cream.AssemblyInfo.cs
+C:\Users\razga\Desktop\CoffeeShop-Ice-Cream\obj\Debug\net6.0-windows\Coffeeshop-Ice-Cream.csproj.CoreCompileInputs.cache
+C:\Users\razga\Desktop\CoffeeShop-Ice-Cream\bin\Debug\net6.0-windows\Coffeeshop-Ice-Cream.exe
+C:\Users\razga\Desktop\CoffeeShop-Ice-Cream\bin\Debug\net6.0-windows\Coffeeshop-Ice-Cream.deps.json
+C:\Users\razga\Desktop\CoffeeShop-Ice-Cream\bin\Debug\net6.0-windows\Coffeeshop-Ice-Cream.runtimeconfig.json
+C:\Users\razga\Desktop\CoffeeShop-Ice-Cream\bin\Debug\net6.0-windows\Coffeeshop-Ice-Cream.dll
+C:\Users\razga\Desktop\CoffeeShop-Ice-Cream\bin\Debug\net6.0-windows\Coffeeshop-Ice-Cream.pdb
+C:\Users\razga\Desktop\CoffeeShop-Ice-Cream\obj\Debug\net6.0-windows\Coffeeshop-Ice-Cream.dll
+C:\Users\razga\Desktop\CoffeeShop-Ice-Cream\obj\Debug\net6.0-windows\refint\Coffeeshop-Ice-Cream.dll
+C:\Users\razga\Desktop\CoffeeShop-Ice-Cream\obj\Debug\net6.0-windows\Coffeeshop-Ice-Cream.pdb
+C:\Users\razga\Desktop\CoffeeShop-Ice-Cream\obj\Debug\net6.0-windows\Coffeeshop-Ice-Cream.genruntimeconfig.cache
+C:\Users\razga\Desktop\CoffeeShop-Ice-Cream\obj\Debug\net6.0-windows\ref\Coffeeshop-Ice-Cream.dll
