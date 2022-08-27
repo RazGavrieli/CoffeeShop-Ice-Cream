@@ -33,6 +33,7 @@ class GUI {
     // Display a help button on the form.
     form1.HelpButton = true;
 
+    
     // Define the border style of the form to a dialog box.
     form1.FormBorderStyle = FormBorderStyle.FixedDialog;
     // Set the MaximizeBox to false to remove the maximize box.
