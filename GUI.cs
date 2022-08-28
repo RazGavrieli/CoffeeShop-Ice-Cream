@@ -10,10 +10,18 @@ using System.Windows.Forms;
 using BLL;
 //using WindowsFormsApplication1.BLL;
 
+using DAL;
+using DataProtocol;
 class GUI { 
     static void Main(string[] args)
     {
-    // Create a new instance of the form.
+    businessLogic BL = new businessLogic();
+    BL.initializeDatabase();
+    BL.newSale();
+    BL.newSale();
+    BL.newSale();
+    BL.newSale();
+    // Create a new instance of the form1.
     Form form1 = new Form();
     // Create two buttons to use as the accept and cancel buttons.
     Button button1 = new Button ();

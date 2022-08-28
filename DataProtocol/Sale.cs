@@ -22,6 +22,12 @@ namespace DataProtocol {
             /**Setting up uniqe ID for each Sale*/
             Id = IDCount;
             IDCount++;
+            /*
+            Comment by Raz:
+            The ID should always be 0 when creating a new sale:
+            The SQL server will a assign a uniqe ID to the new sale. 
+            */
+        
             
             CupType = CupType.Regular;
             date = "48.13.2053";
@@ -31,6 +37,8 @@ namespace DataProtocol {
             Balls.Add(new IceCreamBall(Taste.Cannabis));
             ExtrasOnBalls = new List<Extra>();
             TotalPrice = 0;
+
+            Id = 0;
         }
         public Sale(List<IceCreamBall> Balls, List<Extra> Extras, CupType cup, string date ) {
             /**Setting up uniqe ID for each Sale*/
@@ -152,7 +160,6 @@ namespace DataProtocol {
                  */
                 case CupType.Box:
                     return true;
-                    break;
             }
             return true;
         }
