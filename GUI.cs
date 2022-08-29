@@ -18,13 +18,17 @@ class GUI {
     businessLogic BL = new businessLogic();
     //BL.initializeDatabase(); // THIS LINE IS NEEDED IF THE SQL SERVER IS NOT SET ON YOUR MACHINE
     Sale n = BL.newSale();
-    n.TotalPrice = 5120;
+    n.AddIcecreamBall(new IceCreamBall(Taste.Chocolate));
+    n.AddIcecreamBall(new IceCreamBall(Taste.GiveMe100));
+    n.AddExtra(new Extra(ExtraTaste.HotChocolate));
+    
+    
     BL.sumSale(n);
     // Create a new instance of the form1.
     Form form1 = new Form();
     // Create two buttons to use as the accept and cancel buttons.
-    Button button1 = new Button ();
-    Button button2 = new Button ();
+    Button button1 = new Button();
+    Button button2 = new Button();
     
     // Set the text of button1 to "OK".
     button1.Text = "OK";

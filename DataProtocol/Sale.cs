@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
 using DataProtocol;
+using System.Globalization;
+
 
 namespace DataProtocol {
     public enum CupType
@@ -16,29 +18,19 @@ namespace DataProtocol {
         public string date { get; set; }
         public List<IceCreamBall> Balls { get; set; }
         public List<Extra> ExtrasOnBalls { get; set; }
+        public Boolean boolClosedSale { get; set; }
 
         public float TotalPrice { get; set; }
-        public Sale() {
-            /**Setting up uniqe ID for each Sale*/
-            Id = IDCount;
-            IDCount++;
-            /*
-            Comment by Raz:
-            The ID should always be 0 when creating a new sale:
-            The SQL server will a assign a uniqe ID to the new sale. 
-            */
-        
-            
-            CupType = CupType.Regular;
-            date = "48.13.2053";
-            Balls = new List<IceCreamBall>();
-            //By Default we cannot have less then 0 balls.
-            
-            Balls.Add(new IceCreamBall(Taste.Cannabis));
+        public Sale(CupType type=CupType.Regular) {   
+            Id = 0;
+            CupType = type;
+            DateTime localDate = DateTime.Now;
+            date = localDate.ToString();
+            Balls = new List<IceCreamBall>(); //By Default we cannot have less then 0 balls.
             ExtrasOnBalls = new List<Extra>();
             TotalPrice = 0;
 
-            Id = 0;
+            boolClosedSale=false;
         }
         public Sale(List<IceCreamBall> Balls, List<Extra> Extras, CupType cup, string date ) {
             /**Setting up uniqe ID for each Sale*/
@@ -51,10 +43,13 @@ namespace DataProtocol {
             this.date = date;
             //Check if the sale is valid
             bool bValidSale = CheckForValidOrder();
+            boolClosedSale=false;
+
             if (bValidSale)
             {
                 //Calcilating Sale total price based on ingridients
                 UpdateTotalPrice();
+
             }
             else 
             {
@@ -62,8 +57,16 @@ namespace DataProtocol {
             }
 
         }
-        void AddIcecreamBall(IceCreamBall ball) 
+
+        public void setCup(CupType type) {
+            
+        }
+        public void AddIcecreamBall(IceCreamBall ball) 
         {
+            if(boolClosedSale)
+            {
+                throw new ArgumentException("Cannot add new ingridients, Sale is closed");
+            }
             Balls.Add(ball);
             bool bValidSale = CheckForValidOrder();
             if (bValidSale)
@@ -77,8 +80,12 @@ namespace DataProtocol {
             }
 
         }
-        void AddExtra(Extra extra)
+        public void AddExtra(Extra extra)
         {
+            if(boolClosedSale)
+            {
+                throw new ArgumentException("Cannot add new ingridients, Sale is closed");
+            }
             ExtrasOnBalls.Add(extra);
             bool bValidSale = CheckForValidOrder();
             if (bValidSale)

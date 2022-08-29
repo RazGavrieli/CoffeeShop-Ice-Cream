@@ -1,15 +1,13 @@
 using DAL;
 using DataProtocol; // dataprotocol is written by Amit
 
-using System.Globalization;
 namespace BLL
 {
     public class businessLogic
     {
         public Sale newSale() {
             Sale newsale = new Sale();
-            DateTime localDate = DateTime.Now;
-            newsale.date = localDate.ToString();
+
             Console.WriteLine("New sale recorded at "+newsale.date);
 
             sqlAdapater DAL = new sqlAdapater();
@@ -20,6 +18,7 @@ namespace BLL
         public int sumSale(Sale newsale) {
             sqlAdapater DAL = new sqlAdapater();
             DAL.editSale(newsale);
+            newsale.boolClosedSale = true;
             return 1;
         }
 
