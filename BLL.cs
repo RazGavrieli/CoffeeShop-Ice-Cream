@@ -6,13 +6,7 @@ namespace BLL
 {
     public class businessLogic
     {
-        // public List<Person> GetPeople(int mage)
-        // {
-        //     sqlAdapter DAL=new sqlAdapter();
-        //     var Result=DAL.GetPeople(mage);
-        //     return Result;
-        // }
-        public void newSale() {
+        public Sale newSale() {
             Sale newsale = new Sale();
             DateTime localDate = DateTime.Now;
             newsale.date = localDate.ToString();
@@ -21,11 +15,24 @@ namespace BLL
             sqlAdapater DAL = new sqlAdapater();
             DAL.editSale(newsale);
             Console.WriteLine("Its in the SQL with id: "+newsale.Id);
+            return newsale;
         }
-        public int createSale(Sale newsale) {
+        public int sumSale(Sale newsale) {
             sqlAdapater DAL = new sqlAdapater();
-            //var result = DAL.createSale(newsale);
+            DAL.editSale(newsale);
             return 1;
+        }
+
+        public void finishSale(Sale currsale) {
+            /*
+            This function updates the final sum of the sale and uploads all the Portions used to the SQL server.
+            */
+            sqlAdapater DAL = new sqlAdapater();
+
+
+
+            // maybe call for update 
+            DAL.addIngredientToSale(currsale, 3, 4); // << Example of adding Iid = 3 and amount = 4 (4 balls of something with id 3)
         }
 
         public Boolean initializeDatabase() {

@@ -92,8 +92,6 @@ namespace DAL
                     SqlConnection connection = connectToSQL();
                     connection.Open();
                     SqlCommand command = new SqlCommand(sql, connection);
-                    //command.ExecuteNonQuery();
-                    //command.ExecuteNonQuery();
                     SqlDataReader reader = command.ExecuteReader();
                     while (reader.Read()) // READ THE SQL ANSWER HERE
                     { 
@@ -107,17 +105,13 @@ namespace DAL
                     Console.WriteLine(e.ToString());
                 }
             } else { // This is an existing sale that is being edited
-                String sql = $"UPDATE QUEERY WIP"; // THIS SECTION IS WIP
+                String sql = $"UPDATE sales SET Sum = {newsale.TotalPrice} WHERE Sid = {newsale.Id};"; 
                 try {
                     SqlConnection connection = connectToSQL();
                     connection.Open();
                     SqlCommand command = new SqlCommand(sql, connection);
-                    //SqlDataReader reader = command.ExecuteReader();
-                    //reader.Read();
-                    //var Sid = reader.GetInt32(1);
-                    //var Date = reader.GetString(2);
-                    Console.WriteLine("Added a new sale to the SQL server!, sid: ");
-                    
+                    command.ExecuteNonQuery();
+                    Console.WriteLine(sql);
                 }    
                 catch (SqlException e)
                 {
@@ -160,7 +154,14 @@ namespace DAL
             return ResultSale;
         }
 
-        
+        public void addIngredientToSale(Sale currSale, int Iid, int amount) {
+            String sql = $"INSERT INTO Portions(Iid, Sid, amount) VALUES({Iid}, {currSale.Id}, {amount});";
+            SqlConnection connection = connectToSQL();
+            connection.Open();
+            SqlCommand command = new SqlCommand(sql, connection);
+            command.ExecuteNonQuery();
+
+        }
 
     }
 }

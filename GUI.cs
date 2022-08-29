@@ -16,11 +16,10 @@ class GUI {
     static void Main(string[] args)
     {
     businessLogic BL = new businessLogic();
-    BL.initializeDatabase();
-    BL.newSale();
-    BL.newSale();
-    BL.newSale();
-    BL.newSale();
+    //BL.initializeDatabase(); // THIS LINE IS NEEDED IF THE SQL SERVER IS NOT SET ON YOUR MACHINE
+    Sale n = BL.newSale();
+    n.TotalPrice = 5120;
+    BL.sumSale(n);
     // Create a new instance of the form1.
     Form form1 = new Form();
     // Create two buttons to use as the accept and cancel buttons.
