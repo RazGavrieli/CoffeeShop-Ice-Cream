@@ -41,7 +41,7 @@ namespace DAL
             return true;
         }
         public Boolean createTables() {
-            // -------- CREATE TABLES -------- //
+            // -------- CREATE SALES AND PORTIONS TABLES -------- //
             SqlConnection connection = connectToSQL();
             connection.Open();
             String sql;
@@ -66,14 +66,7 @@ namespace DAL
             command = new SqlCommand(sql, connection);
             command.ExecuteNonQuery();
 
-            sql = 
-                "DROP TABLE IF EXISTS Ingredients;"+
-                "CREATE TABLE Ingredients ("+
-                "Iid int NOT NULL PRIMARY KEY IDENTITY(1,1),"+
-                "Name VARCHAR(45) NOT NULL,"+
-                "Price int NOT NULL);";
-            command = new SqlCommand(sql, connection);
-            command.ExecuteNonQuery();
+
             } 
             catch (SqlException e)
             {
@@ -83,6 +76,48 @@ namespace DAL
             return true;
         }
 
+        public void loadIngredientsTable() {
+            // -------- CREATE INGREDIENT TABLE -------- //
+            SqlConnection connection = connectToSQL();
+            connection.Open();
+            String sql;
+            SqlCommand command;
+            try {
+                sql = 
+                    "DROP TABLE IF EXISTS Ingredients;"+
+                    "CREATE TABLE Ingredients ("+
+                    "Iid int NOT NULL PRIMARY KEY IDENTITY(1,1),"+
+                    "Name VARCHAR(45) NOT NULL"+
+                    ");";
+                command = new SqlCommand(sql, connection);
+                command.ExecuteNonQuery();
+                var values = Enum.GetValues(typeof(Taste));
+                foreach (var ingredientName in values) {
+                    sql = $"INSERT INTO Ingredients(Name) VALUES('{ingredientName}');";
+                    command = new SqlCommand(sql, connection);
+                    command.ExecuteNonQuery();
+                }
+                values = Enum.GetValues(typeof(ExtraTaste));
+                foreach (var ingredientName in values) {
+                    sql = $"INSERT INTO Ingredients(Name) VALUES('{ingredientName}');";
+                    command = new SqlCommand(sql, connection);
+                    command.ExecuteNonQuery();
+                }
+                values = Enum.GetValues(typeof(CupType));
+                foreach (var ingredientName in values) {
+                    sql = $"INSERT INTO Ingredients(Name) VALUES('{ingredientName}');";
+                    command = new SqlCommand(sql, connection);
+                    command.ExecuteNonQuery();
+                }
+            } 
+            catch (SqlException e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+            
+            Console.WriteLine("Ingredient tables created!");
+        }
+        
         public Boolean editSale(Sale newsale)
         {
             if (newsale.Id == 0) { // This is a brand new sale
@@ -121,6 +156,84 @@ namespace DAL
             return true;
         }
 
+        public void recordPortionsOfSale(Sale currsale) {
+            int[] ingredientBucketArr = new int[16];
+            foreach (var ball in currsale.Balls) {
+                ingredientBucketArr[((int)ball.Taste)]++;
+            }
+            foreach (var extra in currsale.ExtrasOnBalls) {
+                ingredientBucketArr[((int)extra.ExtraTaste)+10]++; // +10 to skip over the 10 ball tastes
+            }
+            ingredientBucketArr[((int)currsale.CupType)+13]++; // +13 to skip over the 10 ball tastes and 3 extras 
+            try {
+                for (int Iid = 1; Iid<=ingredientBucketArr.Length; Iid++) {
+                    if (ingredientBucketArr[Iid-1]>0) { // then we need to add this portion of sale to the SQL
+                        addIngredientToSale(currsale.Id, Iid, ingredientBucketArr[Iid-1]);
+                    }
+                }
+            } catch (SqlException e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+        }
+
+        public void addIngredientToSale(int Sid, int Iid, int amount) {
+            String sql = $"INSERT INTO Portions(Iid, Sid, amount) VALUES({Iid}, {Sid}, {amount});";
+            SqlConnection connection = connectToSQL();
+            connection.Open();
+            SqlCommand command = new SqlCommand(sql, connection);
+            command.ExecuteNonQuery();
+
+        }
+
+        public string getRecipt(int Sid) {
+            string ans = ""; 
+            String sql = $"SELECT * FROM sales WHERE Sid = {Sid};";
+            SqlConnection connection = connectToSQL();
+            connection.Open();
+            SqlCommand command = new SqlCommand(sql, connection);
+            SqlDataReader reader = command.ExecuteReader();
+            var date = ""; var sum = 0;
+            while (reader.Read()) // READ THE SQL ANSWER HERE
+            { 
+                date = reader.GetString(1);
+                try 
+                {
+                    sum = reader.GetInt32(2);
+                } 
+                catch (SqlException e)
+                {
+                    Console.WriteLine(e.ToString());
+                    Console.WriteLine("Can't return receipt of an unfinished sale!");
+                }
+            }
+            reader.Close();
+            ans += "Recipt for "+Sid+", "+date+", TOTAL: "+sum+"$\n";
+            sql = $"SELECT * FROM Portions WHERE Sid = {Sid};";
+            command = new SqlCommand(sql, connection);
+            reader = command.ExecuteReader();
+            var Iid = 0; var amount = 0;
+            SqlConnection IngredientNameconnection = connectToSQL();
+            IngredientNameconnection.Open();
+            ans += "\t"+"Iid"+":\t"+"name"+",\t"+"amount"+"\n";
+            while (reader.Read()) // READ THE SQL ANSWER HERE
+            { 
+                Iid = reader.GetInt32(1);
+                amount = reader.GetInt32(3);
+                sql = $"SELECT Name FROM Ingredients WHERE Iid = {Iid};";      
+                Console.WriteLine(sql);
+                SqlCommand IngredientCommand = new SqlCommand(sql, IngredientNameconnection);
+                SqlDataReader IngredientNameReader = IngredientCommand.ExecuteReader();
+                if (IngredientNameReader.Read()) {
+                string name = IngredientNameReader.GetString(0);
+                ans += "\t"+Iid+":\t"+name+",\t"+amount+"\n";
+                } else {
+                    throw new ArgumentException("Couldn't find Iid: "+ Iid);
+                }
+                IngredientNameReader.Close();
+            }
+            return ans;
+        }
         public Sale getSale() {
             Sale ResultSale = new Sale();
             try
@@ -154,14 +267,7 @@ namespace DAL
             return ResultSale;
         }
 
-        public void addIngredientToSale(Sale currSale, int Iid, int amount) {
-            String sql = $"INSERT INTO Portions(Iid, Sid, amount) VALUES({Iid}, {currSale.Id}, {amount});";
-            SqlConnection connection = connectToSQL();
-            connection.Open();
-            SqlCommand command = new SqlCommand(sql, connection);
-            command.ExecuteNonQuery();
 
-        }
 
     }
 }

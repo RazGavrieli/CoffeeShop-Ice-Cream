@@ -4,9 +4,9 @@ namespace DataProtocol
 {
     public enum ExtraTaste
     {
-        HotChocolate,
-        Peanuts,
-        Maple
+        HotChocolate, // Iid = 11
+        Peanuts,// Iid = 12
+        Maple// Iid = 13
     }
     public class Extra 
     {

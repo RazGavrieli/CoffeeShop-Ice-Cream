@@ -7,9 +7,9 @@ using System.Globalization;
 namespace DataProtocol {
     public enum CupType
     {
-        Regular,
-        Special,
-        Box
+        Regular, // Iid = 14
+        Special,// Iid = 15
+        Box// Iid = 16
     }
     public class Sale {
         static int IDCount = 0;
@@ -34,8 +34,7 @@ namespace DataProtocol {
         }
         public Sale(List<IceCreamBall> Balls, List<Extra> Extras, CupType cup, string date ) {
             /**Setting up uniqe ID for each Sale*/
-            Id = IDCount;
-            IDCount++;
+            Id = 0;
 
             this.Balls = Balls;
             this.ExtrasOnBalls = Extras;
@@ -47,7 +46,7 @@ namespace DataProtocol {
 
             if (bValidSale)
             {
-                //Calcilating Sale total price based on ingridients
+                //Calculating Sale total price based on ingridients
                 UpdateTotalPrice();
 
             }
@@ -59,7 +58,10 @@ namespace DataProtocol {
         }
 
         public void setCup(CupType type) {
-            
+            if (Balls.Count > 0 || ExtrasOnBalls.Count > 0) {
+                throw new ArgumentException("Cannot change cuptype once a ball or a taste were added");
+            }
+            CupType = type;
         }
         public void AddIcecreamBall(IceCreamBall ball) 
         {
@@ -71,7 +73,7 @@ namespace DataProtocol {
             bool bValidSale = CheckForValidOrder();
             if (bValidSale)
             {
-                //Calcilating Sale total price based on ingridients
+                //Calculating Sale total price based on ingridients
                 UpdateTotalPrice();
             }
             else
@@ -90,7 +92,7 @@ namespace DataProtocol {
             bool bValidSale = CheckForValidOrder();
             if (bValidSale)
             {
-                //Calcilating Sale total price based on ingridients
+                //Calculating Sale total price based on ingridients
                 UpdateTotalPrice();
             }
             else
@@ -99,7 +101,7 @@ namespace DataProtocol {
             }
 
         }
-        private bool CheckForValidOrder() 
+        public bool CheckForValidOrder() 
         {
             //Cannot have 0 balls in order.
             if (Balls.Count == 0) 
@@ -185,6 +187,8 @@ namespace DataProtocol {
             if (Balls.Count == 1)
             {
                 TotalPrice = 7;
+            } else if (Balls.Count == 2) {
+                TotalPrice = 12;
             }
             else 
             {

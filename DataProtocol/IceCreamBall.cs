@@ -5,16 +5,16 @@
 namespace DataProtocol {
     public enum Taste
     {
-        Chocolate,
-        Vanille,
-        GummyBear,
-        Meat,
-        Pizza,
-        Mekupelet,
-        Cannabis,
-        BrokenDreams,
-        SimpleRickWafers,
-        GiveMe100
+        Chocolate, // Iid = 1
+        Vanille,// Iid = 2
+        GummyBear,// Iid = 3
+        Meat,// Iid = 4
+        Pizza,// Iid = 5
+        Mekupelet,// Iid = 6
+        Cannabis,// Iid = 7
+        BrokenDreams,// Iid = 8
+        SimpleRickWafers,// Iid = 9
+        GiveMe100// Iid = 10
     }
 
     public class IceCreamBall
