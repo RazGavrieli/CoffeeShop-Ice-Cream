@@ -10,8 +10,6 @@ namespace DAL
             {
                 SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
                 builder.ConnectionString = @"Server=localhost\SQLEXPRESS;Database=IceCreamCoffeShop;Trusted_Connection=True;";
-                //builder.DataSource = @"localhost\SQLEXPRESS"; // INSERT HERE CORRECT SETTINGS
-                //builder.InitialCatalog = "master";
                 SqlConnection connection = new SqlConnection(builder.ConnectionString);
                 return connection;
             }
@@ -19,8 +17,9 @@ namespace DAL
             {
                 Console.WriteLine(e.ToString());
             }
-            return null;
+            throw new ArgumentException("Couldn't establish connection with SQL server"); 
         }
+
 
         public Boolean createDatabase() {
             SqlConnection connection = connectToSQL();
@@ -186,7 +185,7 @@ namespace DAL
 
         }
 
-        public string getRecipt(int Sid) {
+        public string getReceipt(int Sid) {
             string ans = ""; 
             String sql = $"SELECT * FROM sales WHERE Sid = {Sid};";
             SqlConnection connection = connectToSQL();
@@ -232,6 +231,52 @@ namespace DAL
                 }
                 IngredientNameReader.Close();
             }
+            return ans;
+        }
+
+        public string unfinishedSales() {
+            string ans = "UNFINISHED SALES:\n";
+            String sql = "SELECT * FROM sales WHERE sum IS NULL;";
+            SqlConnection connection = connectToSQL();
+            connection.Open();
+            SqlCommand command = new SqlCommand(sql, connection);
+            SqlDataReader reader = command.ExecuteReader();
+            while (reader.Read()) // READ THE SQL ANSWER HERE
+            { 
+                ans += "Sid: "+reader.GetInt32(0)+"\tDate: "+reader.GetString(1)+"\n";
+            }
+            return ans;
+        }
+
+        public void deleteUnfinishedSales() {
+            String sql = "DELETE FROM sales WHERE Sum IS NULL;";
+            SqlConnection connection = connectToSQL();
+            connection.Open();
+            SqlCommand command = new SqlCommand(sql, connection);
+            command.ExecuteNonQuery();
+        }
+        public string getDaySum(string askedDate) {
+            string ans = "";
+            String sql = $"SELECT COUNT(Sum) FROM sales WHERE Date LIKE '{askedDate}%'";
+            SqlConnection connection = connectToSQL();
+            connection.Open();
+            SqlCommand command = new SqlCommand(sql, connection);
+            SqlDataReader reader = command.ExecuteReader();
+            var amount = 0; var sum = 0;
+            while (reader.Read()) // READ THE SQL ANSWER HERE
+            { 
+                amount = reader.GetInt32(0);
+            }
+            reader.Close();
+            sql =  $"SELECT SUM(Sum) FROM sales WHERE Date LIKE '{askedDate}%';";
+            command = new SqlCommand(sql, connection);
+            reader = command.ExecuteReader();
+            while (reader.Read()) // READ THE SQL ANSWER HERE
+            { 
+                sum = reader.GetInt32(0);
+            }
+            var avg = sum/amount;
+            ans = "amount of sales: "+amount+"\nsum of sales: "+sum+"\n avarage: "+avg;
             return ans;
         }
         public Sale getSale() {

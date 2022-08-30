@@ -1,5 +1,5 @@
 using DAL;
-using DataProtocol; // dataprotocol is written by Amit
+using DataProtocol; 
 
 namespace BLL
 {
@@ -34,10 +34,25 @@ namespace BLL
             return true;
         }
         
-        public string getRecipt(int Sid) {
+        public string getReceipt(int Sid) {
             sqlAdapater DAL = new sqlAdapater();
-            string ans = DAL.getRecipt(Sid);
+            string ans = DAL.getReceipt(Sid);
             return ans; 
+        }
+        public string getDaySum(string askedDate) {
+            if (askedDate[2]!='/'||askedDate[5]!='/'||askedDate.Length!=10) {
+                throw new ArgumentException("Date is not in the correct format: XX/XX/XXXX"); 
+            }
+            sqlAdapater DAL = new sqlAdapater();
+            string ans = DAL.getDaySum(askedDate);
+            return ans;
+        } 
+
+        public string unfinshedSales() {
+            sqlAdapater DAL = new sqlAdapater();
+            string ans = DAL.unfinishedSales();
+            // DAL.deleteUnfinishedSales(); 
+            return ans;
         }
     }
 }

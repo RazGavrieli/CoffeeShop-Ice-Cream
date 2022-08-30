@@ -25,7 +25,7 @@ class GUI {
     // n.AddExtra(new Extra(ExtraTaste.Maple));
     // n.AddExtra(new Extra(ExtraTaste.Peanuts));
     //n.AddExtra(new Extra(ExtraTaste.HotChocolate));
-    Console.WriteLine(BL.getRecipt(30));
+    Console.WriteLine(BL.unfinshedSales());
     
     //BL.sumSale(n);
     // Create a new instance of the form1.
