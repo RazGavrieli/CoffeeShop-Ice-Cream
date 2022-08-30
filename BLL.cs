@@ -54,5 +54,11 @@ namespace BLL
             // DAL.deleteUnfinishedSales(); 
             return ans;
         }
+
+        public string getBestSellers() {
+            sqlAdapater DAL = new sqlAdapater();
+            string ans = DAL.getBestSellers();
+            return ans;
+        }
     }
 }

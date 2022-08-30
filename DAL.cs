@@ -279,6 +279,48 @@ namespace DAL
             ans = "amount of sales: "+amount+"\nsum of sales: "+sum+"\n avarage: "+avg;
             return ans;
         }
+
+        public string getBestSellers() {
+            string ans = "";
+            String sql = "SELECT Iid, Name, TotalAmount FROM Ingredients INNER JOIN (SELECT Iid as bIid, TotalAmount FROM (SELECT Sum(amount) as TotalAmount, Iid as Iid FROM Portions WHERE Iid<=10 GROUP BY Iid) as a WHERE a.TotalAmount = (SELECT MAX(TotalAmount) FROM (SELECT Sum(amount) as TotalAmount, Iid as Iid FROM Portions WHERE Iid<=10 GROUP BY Iid) as b)) c ON Ingredients.Iid=c.bIid;";
+            SqlConnection connection = connectToSQL();
+            connection.Open();
+            SqlCommand command = new SqlCommand(sql, connection);
+            SqlDataReader reader = command.ExecuteReader();
+            var bestSellerIid = 0; var bestSellerName = ""; var bestSellerAmount = 0;
+            while (reader.Read()) // READ THE SQL ANSWER HERE
+            { 
+                bestSellerIid = reader.GetInt32(0);
+                bestSellerName = reader.GetString(1);
+                bestSellerAmount = reader.GetInt32(2);
+            }
+            reader.Close();
+            ans += "Best Seller Ball Taste:\n Iid:"+bestSellerIid+", "+bestSellerName+", "+bestSellerAmount+"\n";
+            sql = "SELECT Iid, Name, TotalAmount FROM Ingredients INNER JOIN (SELECT Iid as bIid, TotalAmount FROM (SELECT Sum(amount) as TotalAmount, Iid as Iid FROM Portions WHERE Iid>=11 AND Iid<=13 GROUP BY Iid) as a WHERE a.TotalAmount = (SELECT MAX(TotalAmount) FROM (SELECT Sum(amount) as TotalAmount, Iid as Iid FROM Portions WHERE Iid>=11 AND Iid<=13 GROUP BY Iid) as b)) c ON Ingredients.Iid=c.bIid;";
+            command = new SqlCommand(sql, connection);
+            reader = command.ExecuteReader();
+            while (reader.Read()) // READ THE SQL ANSWER HERE
+            { 
+                bestSellerIid = reader.GetInt32(0);
+                bestSellerName = reader.GetString(1);
+                bestSellerAmount = reader.GetInt32(2);
+            }
+            ans += "Best Seller Extra Taste:\n Iid:"+bestSellerIid+", "+bestSellerName+", "+bestSellerAmount+"\n";
+            reader.Close();
+            sql = "SELECT Iid, Name, TotalAmount FROM Ingredients INNER JOIN (SELECT Iid as bIid, TotalAmount FROM (SELECT Sum(amount) as TotalAmount, Iid as Iid FROM Portions WHERE Iid>=14 AND Iid<=16 GROUP BY Iid) as a WHERE a.TotalAmount = (SELECT MAX(TotalAmount) FROM (SELECT Sum(amount) as TotalAmount, Iid as Iid FROM Portions WHERE Iid>=14 AND Iid<=16 GROUP BY Iid) as b)) c ON Ingredients.Iid=c.bIid;";
+            command = new SqlCommand(sql, connection);
+            reader = command.ExecuteReader();
+            while (reader.Read()) // READ THE SQL ANSWER HERE
+            { 
+                bestSellerIid = reader.GetInt32(0);
+                bestSellerName = reader.GetString(1);
+                bestSellerAmount = reader.GetInt32(2);
+            }
+            ans += "Best Seller Cup Type:\n Iid:"+bestSellerIid+", "+bestSellerName+", "+bestSellerAmount+"\n";
+            reader.Close();
+            return ans;
+        }
+
         public Sale getSale() {
             Sale ResultSale = new Sale();
             try

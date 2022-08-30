@@ -13,21 +13,27 @@ using BLL;
 using DAL;
 using DataProtocol;
 class GUI { 
+    static void clicktest(Object sender, EventArgs e)
+    {
+        // When the button is clicked,
+        // change the button text, and disable it.
+
+        Button clickedButton = (Button)sender;
+        //clickedButton.Text = "...button clicked...";
+        //clickedButton.Enabled = false;
+        
+        // Display the greeting label text.
+        Console.WriteLine("button clicked ");
+    }
+    
     static void Main(string[] args)
     {
     businessLogic BL = new businessLogic();
     //BL.initializeDatabase(); // THIS LINE IS NEEDED IF THE SQL SERVER IS NOT SET ON YOUR MACHINE
-    //Sale n = BL.newSale();
-    // n.setCup(CupType.Special);
-    // n.AddIcecreamBall(new IceCreamBall(Taste.Chocolate));
-    // n.AddIcecreamBall(new IceCreamBall(Taste.GiveMe100));
-    // n.AddIcecreamBall(new IceCreamBall(Taste.GiveMe100));
-    // n.AddExtra(new Extra(ExtraTaste.Maple));
-    // n.AddExtra(new Extra(ExtraTaste.Peanuts));
-    //n.AddExtra(new Extra(ExtraTaste.HotChocolate));
-    Console.WriteLine(BL.unfinshedSales());
+
+    Console.WriteLine(BL.getBestSellers());
     
-    //BL.sumSale(n);
+    Console.Write(BL.getDaySum("30/08/2022"));
     // Create a new instance of the form1.
     Form form1 = new Form();
     // Create two buttons to use as the accept and cancel buttons.
@@ -40,6 +46,7 @@ class GUI {
     button1.Location = new Point (10, 10);
     // Set the text of button2 to "Cancel".
     button2.Text = "Cancel";
+    button2.Click += new EventHandler(clicktest);
     // Set the position of the button based on the location of button1.
     button2.Location
         = new Point (button1.Left, button1.Height + button1.Top + 10);
@@ -56,9 +63,9 @@ class GUI {
     // Set the MinimizeBox to false to remove the minimize box.
     form1.MinimizeBox = false;
     // Set the accept button of the form to button1.
-    form1.AcceptButton = button1;
+    //form1.AcceptButton = button1;
     // Set the cancel button of the form to button2.
-    form1.CancelButton = button2;
+    //form1.CancelButton = button2;
     // Set the start position of the form to the center of the screen.
     form1.StartPosition = FormStartPosition.CenterScreen;
     
@@ -70,4 +77,5 @@ class GUI {
     // Display the form as a modal dialog box.
     form1.ShowDialog();
     }
+
 }
