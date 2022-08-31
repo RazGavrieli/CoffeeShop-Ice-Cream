@@ -37,11 +37,12 @@ namespace BLL
         }
 
         public Boolean initializeDatabase() {
-            if (noSQL) { }
-            else {
-            DAL.createDatabase();
-            DAL.createTables();
-            DAL.loadIngredientsTable();
+            if (noSQL) {
+                nDAL.loadIngredientsTable();
+            } else {
+                DAL.createDatabase();
+                DAL.createTables();
+                DAL.loadIngredientsTable();
             }
             return true;
         }

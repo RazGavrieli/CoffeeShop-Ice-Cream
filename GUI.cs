@@ -8,9 +8,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using BLL;
-//using WindowsFormsApplication1.BLL;
-
-using DAL;
 using DataProtocol;
 
 class GUI { 
@@ -20,6 +17,7 @@ class GUI {
         Sale currSale = BL.newSale();
 
         Form saleForm = new Form();
+        saleForm.BackColor = Color.Pink;
         saleForm.Text = "Sale Box";
         saleForm.FormBorderStyle = FormBorderStyle.FixedDialog;
         saleForm.StartPosition = FormStartPosition.CenterParent;
@@ -192,11 +190,14 @@ class GUI {
         getBestSellersButton.Text = "Best Sellers";
         getBestSellersButton.Location = new Point (100, 120);
         getBestSellersButton.AutoSize = true;
-
         Button toggleSQLButton = new Button();
         toggleSQLButton.Text = "SQL";
         toggleSQLButton.Location = new Point (100, 150);
         toggleSQLButton.AutoSize = true;
+        Button initializeDbButton = new Button();
+        initializeDbButton.Text = "Initialize DB";
+        initializeDbButton.Location = new Point (100, 180);
+        initializeDbButton.AutoSize = true;
 
         adminForm.Controls.Add(SidBox);
         adminForm.Controls.Add(dateBox);
@@ -206,6 +207,7 @@ class GUI {
         adminForm.Controls.Add(deleteUnfinishedButton);
         adminForm.Controls.Add(getBestSellersButton);
         adminForm.Controls.Add(toggleSQLButton);
+        adminForm.Controls.Add(initializeDbButton);
         adminForm.AutoSize = true;
         getDaySumButton.Click += (sender, e) => getdaysum(sender, e, dateBox.Text);
         getReceiptButton.Click += (sender, e) => getreceipt(sender, e, SidBox.Text);
@@ -213,6 +215,7 @@ class GUI {
         deleteUnfinishedButton.Click += (sender, e) => getunfinished(sender, e, true);
         getBestSellersButton.Click += (sender, e) => getbestsellers(sender, e);
         toggleSQLButton.Click += (sender, e) => toggleSQLButtonF(sender, e);
+        initializeDbButton.Click += (sender, e) => initializeDB(sender, e);
 
         adminForm.ShowDialog();
         
@@ -220,6 +223,21 @@ class GUI {
         //Console.WriteLine("button clicked "+test+" THIS IS IT");
     }
 
+    void initializeDB(Object sender, EventArgs e) {
+        const string caption = "Form Closing";
+        string msg = "You are going to reinitialize the database, it may delete data.\n Are you sure?";
+        if (BL.noSQL) {
+            msg += "\nYou are currently connected to the noSQL server (MongoDB)";
+        } else {
+            msg += "\n YOU ARE CONNECTED TO THE SQL SERVER, INITIALIZING THE SERVER WILL DELETE DATA!";
+        }
+        var res = MessageBox.Show(msg, caption,
+                                 MessageBoxButtons.YesNo,
+                                 MessageBoxIcon.Exclamation);
+        if (res == DialogResult.Yes) {
+            BL.initializeDatabase();
+        }
+    }
     void toggleSQLButtonF(Object sender, EventArgs e) {
         Button toggleButton = (Button)sender;
         BL.noSQL = !BL.noSQL;
