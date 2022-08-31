@@ -19,8 +19,6 @@ namespace DAL
             }
             throw new ArgumentException("Couldn't establish connection with SQL server"); 
         }
-
-
         public Boolean createDatabase() {
             SqlConnection connection = connectToSQL();
             connection.Open();
@@ -119,7 +117,7 @@ namespace DAL
         
         public Boolean editSale(Sale newsale)
         {
-            if (newsale.Id == 0) { // This is a brand new sale
+            if (newsale.Sid == 0) { // This is a brand new sale
                 String sql = $"INSERT INTO sales(Date) OUTPUT Inserted.Sid VALUES('{newsale.date}');";
                             
                 try {
@@ -130,7 +128,7 @@ namespace DAL
                     while (reader.Read()) // READ THE SQL ANSWER HERE
                     { 
                         var Sid = reader.GetInt32(0);
-                        newsale.Id = Sid;
+                        newsale.Sid = Sid;
                         Console.WriteLine("Added a new sale to the SQL server!, sid: "+Sid.ToString());
                     }
                 }
@@ -139,7 +137,7 @@ namespace DAL
                     Console.WriteLine(e.ToString());
                 }
             } else { // This is an existing sale that is being edited
-                String sql = $"UPDATE sales SET Sum = {newsale.TotalPrice} WHERE Sid = {newsale.Id};"; 
+                String sql = $"UPDATE sales SET Sum = {newsale.TotalPrice} WHERE Sid = {newsale.Sid};"; 
                 try {
                     SqlConnection connection = connectToSQL();
                     connection.Open();
@@ -167,7 +165,7 @@ namespace DAL
             try {
                 for (int Iid = 1; Iid<=ingredientBucketArr.Length; Iid++) {
                     if (ingredientBucketArr[Iid-1]>0) { // then we need to add this portion of sale to the SQL
-                        addIngredientToSale(currsale.Id, Iid, ingredientBucketArr[Iid-1]);
+                        addIngredientToSale(currsale.Sid, Iid, ingredientBucketArr[Iid-1]);
                     }
                 }
             } catch (SqlException e)
@@ -262,7 +260,7 @@ namespace DAL
             connection.Open();
             SqlCommand command = new SqlCommand(sql, connection);
             SqlDataReader reader = command.ExecuteReader();
-            var amount = 0; var sum = 0;
+            var amount = 0; var sum = 0; var avg = 0;
             while (reader.Read()) // READ THE SQL ANSWER HERE
             { 
                 amount = reader.GetInt32(0);
@@ -275,7 +273,9 @@ namespace DAL
             { 
                 sum = reader.GetInt32(0);
             }
-            var avg = sum/amount;
+            if (amount>0)
+                avg = sum/amount;
+
             ans = "amount of sales: "+amount+"\nsum of sales: "+sum+"\n avarage: "+avg;
             return ans;
         }
@@ -320,40 +320,6 @@ namespace DAL
             reader.Close();
             return ans;
         }
-
-        public Sale getSale() {
-            Sale ResultSale = new Sale();
-            try
-            {
-                using (SqlConnection connection = connectToSQL())
-                {
-                    connection.Open();
-
-                    String sql = $"insert sql querry here"; // INSERT SQL QUERRY HERE
-
-                    using (SqlCommand command = new SqlCommand(sql, connection))
-                    {
-                        using (SqlDataReader reader = command.ExecuteReader())
-                        {
-                            while (reader.Read()) // READ THE SQL ANSWER HERE
-                            {
-                                ResultSale.Id = reader.GetInt32(1);
-                                ResultSale.date = reader.GetString(2);
-                                ResultSale.TotalPrice = reader.GetFloat(3);
-                            }
-                            
-                        }
-                    }
-                    connection.Close(); // NOT SURE IF NEEDED
-                }
-            }
-            catch (SqlException e)
-            {
-                Console.WriteLine(e.ToString());
-            }
-            return ResultSale;
-        }
-
 
 
     }

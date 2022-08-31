@@ -3,17 +3,23 @@ using System.Collections;
 using DataProtocol;
 using System.Globalization;
 
+using MongoDB.Bson;
+using MongoDB.Driver;
 
-namespace DataProtocol {
+
+namespace DataProtocol
+{
     public enum CupType
     {
         Regular, // Iid = 14
         Special,// Iid = 15
         Box// Iid = 16
     }
-    public class Sale {
-        static int IDCount = 0;
-        public int Id { get; set; }
+    public class Sale
+    {
+
+        public ObjectId Id { get; set; }
+        public int Sid { get; set; }
         public CupType CupType { get; set; }
         public string date { get; set; }
         public List<IceCreamBall> Balls { get; set; }
@@ -21,8 +27,9 @@ namespace DataProtocol {
         public Boolean boolClosedSale { get; set; }
 
         public float TotalPrice { get; set; }
-        public Sale(CupType type=CupType.Regular) {   
-            Id = 0;
+        public Sale(CupType type = CupType.Regular)
+        {
+            Sid = 0;
             CupType = type;
             DateTime localDate = DateTime.Now;
             date = localDate.ToString();
@@ -30,11 +37,12 @@ namespace DataProtocol {
             ExtrasOnBalls = new List<Extra>();
             TotalPrice = 0;
 
-            boolClosedSale=false;
+            boolClosedSale = false;
         }
-        public Sale(List<IceCreamBall> Balls, List<Extra> Extras, CupType cup, string date ) {
+        public Sale(List<IceCreamBall> Balls, List<Extra> Extras, CupType cup, string date)
+        {
             /**Setting up uniqe ID for each Sale*/
-            Id = 0;
+            Sid = 0;
 
             this.Balls = Balls;
             this.ExtrasOnBalls = Extras;
@@ -42,7 +50,7 @@ namespace DataProtocol {
             this.date = date;
             //Check if the sale is valid
             bool bValidSale = CheckForValidOrder();
-            boolClosedSale=false;
+            boolClosedSale = false;
 
             if (bValidSale)
             {
@@ -50,22 +58,24 @@ namespace DataProtocol {
                 UpdateTotalPrice();
 
             }
-            else 
+            else
             {
                 throw new ArgumentException("Invaild Order");
             }
 
         }
 
-        public void setCup(CupType type) {
-            if (Balls.Count > 0 || ExtrasOnBalls.Count > 0) {
+        public void setCup(CupType type)
+        {
+            if (Balls.Count > 0 || ExtrasOnBalls.Count > 0)
+            {
                 throw new ArgumentException("Cannot change cuptype once a ball or a taste were added");
             }
             CupType = type;
         }
-        public void AddIcecreamBall(IceCreamBall ball) 
+        public void AddIcecreamBall(IceCreamBall ball)
         {
-            if(boolClosedSale)
+            if (boolClosedSale)
             {
                 throw new ArgumentException("Cannot add new ingridients, Sale is closed");
             }
@@ -84,7 +94,7 @@ namespace DataProtocol {
         }
         public void AddExtra(Extra extra)
         {
-            if(boolClosedSale)
+            if (boolClosedSale)
             {
                 throw new ArgumentException("Cannot add new ingridients, Sale is closed");
             }
@@ -101,14 +111,15 @@ namespace DataProtocol {
             }
 
         }
-        public bool CheckForValidOrder() 
+        public bool CheckForValidOrder()
         {
             //Cannot have 0 balls in order.
-            if (Balls.Count == 0) 
+            if (Balls.Count == 0)
             {
                 return false;
             }
-            switch (this.CupType){
+            switch (this.CupType)
+            {
                 /**
                  * Case 1: regular cup:
                  * 1.amount of icecream balls: 1-3
@@ -118,28 +129,28 @@ namespace DataProtocol {
                  * 5.vanille balls taste->maple extra invalid
                  */
                 case CupType.Regular:
-                    if (Balls.Count > 3) 
+                    if (Balls.Count > 3)
                     {
                         return false;
                     }
-                    if (Balls.Count < 2 && ExtrasOnBalls.Count != 0) 
+                    if (Balls.Count < 2 && ExtrasOnBalls.Count != 0)
                     {
                         return false;
                     }
-                    for (int i = 0; i < Balls.Count; i++) 
+                    for (int i = 0; i < Balls.Count; i++)
                     {
-                        if (Balls[i].Taste == Taste.Chocolate || Balls[i].Taste == Taste.Mekupelet) 
+                        if (Balls[i].Taste == Taste.Chocolate || Balls[i].Taste == Taste.Mekupelet)
                         {
-                            for (int k = 0; k < ExtrasOnBalls.Count; k++) 
+                            for (int k = 0; k < ExtrasOnBalls.Count; k++)
                             {
-                                if (ExtrasOnBalls[k].ExtraTaste == ExtraTaste.HotChocolate) 
+                                if (ExtrasOnBalls[k].ExtraTaste == ExtraTaste.HotChocolate)
                                 {
                                     return false;
                                 }
                             }
                         }
 
-                        if (Balls[i].Taste == Taste.Vanille) 
+                        if (Balls[i].Taste == Taste.Vanille)
                         {
                             for (int k = 0; k < ExtrasOnBalls.Count; k++)
                             {
@@ -152,10 +163,10 @@ namespace DataProtocol {
                     }
                     break;
 
-                    /**
-                     * Case 2: Speciel cup type
-                     * 1.Balls count: 1-3
-                     */
+                /**
+                 * Case 2: Speciel cup type
+                 * 1.Balls count: 1-3
+                 */
                 case CupType.Special:
                     if (Balls.Count > 3)
                     {
@@ -172,7 +183,7 @@ namespace DataProtocol {
             }
             return true;
         }
-        private void UpdateTotalPrice() 
+        private void UpdateTotalPrice()
         {
 
             /**
@@ -187,15 +198,17 @@ namespace DataProtocol {
             if (Balls.Count == 1)
             {
                 TotalPrice = 7;
-            } else if (Balls.Count == 2) {
+            }
+            else if (Balls.Count == 2)
+            {
                 TotalPrice = 12;
             }
-            else 
+            else
             {
                 TotalPrice = Balls.Count * 6;
             }
 
-            if (this.CupType == CupType.Special) 
+            if (this.CupType == CupType.Special)
             {
                 TotalPrice += 2;
             }
