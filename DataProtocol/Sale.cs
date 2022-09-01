@@ -31,7 +31,7 @@ namespace DataProtocol
             Sid = 0;
             CupType = type;
             DateTime localDate = DateTime.Now;
-            date = localDate.ToString();
+            date = localDate.ToString("dd/MM/yyyy HH:mm:ss");
             Balls = new List<IceCreamBall>(); //By Default we cannot have less then 0 balls.
             ExtrasOnBalls = new List<Extra>();
             TotalPrice = 0;

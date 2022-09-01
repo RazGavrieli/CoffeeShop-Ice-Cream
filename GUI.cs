@@ -224,7 +224,7 @@ class GUI {
     }
 
     void initializeDB(Object sender, EventArgs e) {
-        const string caption = "Form Closing";
+        const string caption = "REMOVING IMPORTANT DATA";
         string msg = "You are going to reinitialize the database, it may delete data.\n Are you sure?";
         if (BL.noSQL) {
             msg += "\nYou are currently connected to the noSQL server (MongoDB)";
@@ -307,8 +307,8 @@ class GUI {
     }
     static void Main(string[] args)
     {
-    GUI g = new GUI();
-    g.Go();
+        GUI g = new GUI();
+        g.Go();
     }
 
 }
