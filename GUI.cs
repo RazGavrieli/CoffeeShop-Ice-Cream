@@ -82,13 +82,13 @@ class GUI {
     }
 
     void seesale(Object sender, EventArgs e, Sale currSale) {
-        string ans = "";
+        string ans = "Cup Type: "+currSale.CupType+"\n";
         foreach (var ball in currSale.Balls)
             ans += ball.Taste+", ";
 
         ans+="\n";
         foreach (var extra in currSale.ExtrasOnBalls)
-            ans += extra+", ";
+            ans += extra.ExtraTaste+", ";
         MessageBox.Show(ans);
     }
 
@@ -220,7 +220,6 @@ class GUI {
         adminForm.ShowDialog();
         
 
-        //Console.WriteLine("button clicked "+test+" THIS IS IT");
     }
 
     void initializeDB(Object sender, EventArgs e) {
@@ -267,42 +266,25 @@ class GUI {
 
 
     void Go() {
-        //BL.initializeDatabase(); // THIS LINE IS NEEDED IF THE SQL SERVER IS NOT SET ON YOUR MACHINE
     
-        //Console.Write(BL.getDaySum("30/08/2022"));
-        // Create a new instance of the form1.
         Form form1 = new Form();
-        // Create two buttons to use as the accept and cancel buttons.
         Button button1 = new Button();
         Button button2 = new Button();
         
-        // Set the text of button1 to "OK".
         button1.Text = "New Sale";
         button1.Click += new EventHandler(salefunction);
-        // Set the position of the button on the form.
         button1.Location = new Point (10, 10);
-        // Set the text of button2 to "Cancel".
         button2.Text = "Admin";
         button2.Click += new EventHandler(adminfunction);
-        // Set the position of the button based on the location of button1.
-        button2.Location
-            = new Point (button1.Left, button1.Height + button1.Top + 10);
-        // Set the caption bar text of the form.   
+        button2.Location = new Point (button1.Left, button1.Height + button1.Top + 10);
         form1.Text = "Ice Cream Shop";
-        // Display a help button on the form.
-        //form1.HelpButton = true;
 
-        
-        // Define the border style of the form to a dialog box.
         form1.FormBorderStyle = FormBorderStyle.FixedDialog;
         form1.StartPosition = FormStartPosition.CenterScreen;
         
-        // Add button1 to the form.
         form1.Controls.Add(button1);
-        // Add button2 to the form.
         form1.Controls.Add(button2);
         
-        // Display the form as a modal dialog box.
         form1.ShowDialog();
     }
     static void Main(string[] args)

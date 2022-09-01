@@ -84,7 +84,6 @@ namespace DAL {
 
         return ans;
     }
-
     public string getDaySum(string askedDate) {
         string ans = "";
         var amount = 0; var sum = 0; var avg = 0;
