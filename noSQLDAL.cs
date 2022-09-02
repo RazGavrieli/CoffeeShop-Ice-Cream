@@ -5,14 +5,26 @@ using System.Linq;
 
 namespace DAL {
     class noSQLadapter {
+        /*
+        This class is used to communicate with a MongoDB cloud (or local server). (Data-Access-Layer)
+        Inorder to connect to your own server, change the dbClient MongoClient connection string in the function 'connectToNOSQL()'.
+        */
+
     public IMongoDatabase connectToNOSQL()
     {
+    /* This function returns the connection to the server. It is used in almost every function in this class. 
+    */
         MongoClient dbClient = new MongoClient("mongodb+srv://Raz:2580@cluster0.6clvl3i.mongodb.net/test");
         IMongoDatabase database = dbClient.GetDatabase ("IceCreamCoffeeShop");
         return database;
     }
 
     public void loadIngredientsTable() {
+        /*
+        NOTICE: THE NAME OF THE FUNCTION INCLUDES THE WORD 'TABLE', EVEN THOUGH IT CREATES A DOCUMENT AND NOT A TABLE. (noSQL DAL). 
+            This function creates the lookup document for the Ingredients. 
+            The database manager should call this function everytime the IceCream shop updates the tastes. 
+        */
         IMongoDatabase datebase = connectToNOSQL();
         var IngredientsCollection = datebase.GetCollection<BsonDocument>("Ingredient-LOOKUP");
         var values = Enum.GetValues(typeof(Taste));
@@ -38,6 +50,11 @@ namespace DAL {
     }
 
     public Boolean editSale(Sale newsale) {
+            /*
+                Despite it's misleading name, this function is used to add a new sale to the database or to update an exisiting sale. 
+                if the Sid of @variable 'newsale' is 0, it means that the sale is still not stored in the database. 
+                Else, the sale is already stored in the database so the function will Update the sale's information in the database. 
+            */
         if (newsale.Sid == 0) {
             newsale.Sid=1;
             IMongoDatabase datebase = connectToNOSQL();
@@ -57,6 +74,9 @@ namespace DAL {
     }
 
     public string getReceipt(int Sid) {
+            /*
+                Uses an Sid to find the sale in the database and creates a receipt for it. 
+            */
             string ans = ""; 
             IMongoDatabase datebase = connectToNOSQL();
             var salesCollection = datebase.GetCollection<Sale> ("sales");
@@ -74,6 +94,10 @@ namespace DAL {
             return ans;
         }
     public string unfinishedSales() {
+        /*
+            Returns all the unfinished sales in the database. 
+            A sale is 'unfinished' if in the document 'sales', It's 'boolClosedSale' field is false. 
+        */
         string ans = "UNFINISHED SALES:\n";
         IMongoDatabase datebase = connectToNOSQL();
         var salesCollection = datebase.GetCollection<Sale> ("sales");
@@ -85,6 +109,9 @@ namespace DAL {
         return ans;
     }
     public string getDaySum(string askedDate) {
+        /*
+            Finds in the collection sales all the sales that were created on the asked date and returns a summary. 
+        */
         string ans = "";
         var amount = 0; var sum = 0; var avg = 0;
         IMongoDatabase datebase = connectToNOSQL();
@@ -102,6 +129,9 @@ namespace DAL {
         return ans;
     }
     public string getBestSellers() {
+        /*
+            Counts the ingredients through all the sales in the 'sales' document and returns the best sellers of all time. 
+        */
         string ans = "";
         IMongoDatabase datebase = connectToNOSQL();
         var salesCollection = datebase.GetCollection<Sale> ("sales");

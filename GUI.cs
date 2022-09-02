@@ -13,6 +13,9 @@ using DataProtocol;
 class GUI { 
     businessLogic BL = new businessLogic();
     void salefunction(Object sender, EventArgs e) {
+        /*
+            Creates and shows the form for a new sale.
+        */
         Button newsaleButton = (Button)sender;
         Sale currSale = BL.newSale();
 
@@ -161,6 +164,9 @@ class GUI {
 
     void adminfunction(Object sender, EventArgs e)
     {
+        /*
+            Creates and shows the form for the admin. 
+        */
         Button adminButton = (Button)sender;
         TextBox dateBox = new TextBox();
         dateBox.Text = "XX/XX/XXXX";
@@ -267,25 +273,25 @@ class GUI {
 
     void Go() {
     
-        Form form1 = new Form();
-        Button button1 = new Button();
-        Button button2 = new Button();
+        Form mainForm = new Form();
+        Button saleButton = new Button();
+        Button adminButton = new Button();
         
-        button1.Text = "New Sale";
-        button1.Click += new EventHandler(salefunction);
-        button1.Location = new Point (10, 10);
-        button2.Text = "Admin";
-        button2.Click += new EventHandler(adminfunction);
-        button2.Location = new Point (button1.Left, button1.Height + button1.Top + 10);
-        form1.Text = "Ice Cream Shop";
+        saleButton.Text = "New Sale";
+        saleButton.Click += new EventHandler(salefunction);
+        saleButton.Location = new Point (10, 10);
+        adminButton.Text = "Admin";
+        adminButton.Click += new EventHandler(adminfunction);
+        adminButton.Location = new Point (saleButton.Left, saleButton.Height + saleButton.Top + 10);
+        mainForm.Text = "Ice Cream Shop";
 
-        form1.FormBorderStyle = FormBorderStyle.FixedDialog;
-        form1.StartPosition = FormStartPosition.CenterScreen;
+        mainForm.FormBorderStyle = FormBorderStyle.FixedDialog;
+        mainForm.StartPosition = FormStartPosition.CenterScreen;
         
-        form1.Controls.Add(button1);
-        form1.Controls.Add(button2);
+        mainForm.Controls.Add(saleButton);
+        mainForm.Controls.Add(adminButton);
         
-        form1.ShowDialog();
+        mainForm.ShowDialog();
     }
     static void Main(string[] args)
     {

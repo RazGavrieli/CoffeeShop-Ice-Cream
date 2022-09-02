@@ -5,7 +5,13 @@ namespace DAL
 {
     public class sqlAdapater
     {
+        /*
+        This class is used to communicate with an SQL server. (Data-Access-Layer)
+        Inorder to connect to your own SQL server, change the 'builder.ConnectionString' in the function 'connectToSQL()'.
+        */
         public SqlConnection connectToSQL() {
+            /* This function returns the connection to the SQL. It is used in almost every function in this class. 
+            */
             try
             {
                 SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
@@ -20,6 +26,8 @@ namespace DAL
             throw new ArgumentException("Couldn't establish connection with SQL server"); 
         }
         public Boolean createDatabase() {
+            /*This function is used to create the database, it has to be used atleast once in the SQL server. 
+            */ 
             SqlConnection connection = connectToSQL();
             connection.Open();
             String sql;
@@ -38,6 +46,9 @@ namespace DAL
             return true;
         }
         public Boolean createTables() {
+            /*This function is used to create the tables, it has to be used atleast once in the SQL server. 
+            If used more than once, it will delete old records of sales. 
+            */ 
             // -------- CREATE SALES AND PORTIONS TABLES -------- //
             SqlConnection connection = connectToSQL();
             connection.Open();
@@ -74,6 +85,9 @@ namespace DAL
         }
 
         public void loadIngredientsTable() {
+            /*This function is used to load the Ingredients of the IceCreamShop into a LOOKUP TABLE that is stored in the SQL server.
+            If the Ingredients of the shop were changed, the database manager has to call this function again to update the lookup table. 
+            */ 
             // -------- CREATE INGREDIENT TABLE -------- //
             SqlConnection connection = connectToSQL();
             connection.Open();
@@ -88,19 +102,19 @@ namespace DAL
                     ");";
                 command = new SqlCommand(sql, connection);
                 command.ExecuteNonQuery();
-                var values = Enum.GetValues(typeof(Taste));
+                var values = Enum.GetValues(typeof(Taste));  // << This line gets the correct ingredient list from the DataProtocol
                 foreach (var ingredientName in values) {
                     sql = $"INSERT INTO Ingredients(Name) VALUES('{ingredientName}');";
                     command = new SqlCommand(sql, connection);
                     command.ExecuteNonQuery();
                 }
-                values = Enum.GetValues(typeof(ExtraTaste));
+                values = Enum.GetValues(typeof(ExtraTaste)); // << This line gets the correct ingredient list from the DataProtocol
                 foreach (var ingredientName in values) {
                     sql = $"INSERT INTO Ingredients(Name) VALUES('{ingredientName}');";
                     command = new SqlCommand(sql, connection);
                     command.ExecuteNonQuery();
                 }
-                values = Enum.GetValues(typeof(CupType));
+                values = Enum.GetValues(typeof(CupType)); // << This line gets the correct ingredient list from the DataProtocol
                 foreach (var ingredientName in values) {
                     sql = $"INSERT INTO Ingredients(Name) VALUES('{ingredientName}');";
                     command = new SqlCommand(sql, connection);
@@ -117,6 +131,11 @@ namespace DAL
         
         public Boolean editSale(Sale newsale)
         {
+            /*
+                Despite it's misleading name, this function is used to add a new sale to the database or to update an exisiting sale. 
+                if the Sid of @variable 'newsale' is 0, it means that the sale is still not stored in the database. 
+                Else, the sale is already stored in the database so the function will UPDATE the sale's information in the database. 
+            */
             if (newsale.Sid == 0) { // This is a brand new sale
                 String sql = $"INSERT INTO sales(Date) OUTPUT Inserted.Sid VALUES('{newsale.date}');";
                             
@@ -154,6 +173,11 @@ namespace DAL
         }
 
         public void recordPortionsOfSale(Sale currsale) {
+            /*
+                The 'Portions' table (as described in the ERD) is used to record the specific ingredients used in each sale. 
+                Once the sale is finished and ready to be summed up, this function is used to record the ingredient of the sale in a designated table. ('Portions' table). 
+
+            */
             int[] ingredientBucketArr = new int[16];
             foreach (var ball in currsale.Balls) {
                 ingredientBucketArr[((int)ball.Taste)]++;
@@ -175,6 +199,9 @@ namespace DAL
         }
 
         public void addIngredientToSale(int Sid, int Iid, int amount) {
+            /*
+                Helper function for 'recordPortionsOfSale(Sale currsale)'.
+            */
             String sql = $"INSERT INTO Portions(Iid, Sid, amount) VALUES({Iid}, {Sid}, {amount});";
             SqlConnection connection = connectToSQL();
             connection.Open();
@@ -184,6 +211,9 @@ namespace DAL
         }
 
         public string getReceipt(int Sid) {
+            /*
+                Uses an Sid to find the sale in the database and creates a receipt for it. 
+            */
             string ans = ""; 
             String sql = $"SELECT * FROM sales WHERE Sid = {Sid};";
             SqlConnection connection = connectToSQL();
@@ -233,6 +263,10 @@ namespace DAL
         }
 
         public string unfinishedSales() {
+            /*
+                Returns all the unfinished sales in the database. 
+                A sale is 'unfinished' if in the table 'sales', it's 'Sum' collum is null. (Should be an int representing the price)
+            */
             string ans = "UNFINISHED SALES:\n";
             String sql = "SELECT * FROM sales WHERE sum IS NULL;";
             SqlConnection connection = connectToSQL();
@@ -247,6 +281,10 @@ namespace DAL
         }
 
         public void deleteUnfinishedSales() {
+            /*
+                Deletes all the sales that are not finished from the database. 
+                A sale is 'unfinished' if in the table 'sales', it's 'Sum' collum is null. (Should be an int representing the price)
+            */
             String sql = "DELETE FROM sales WHERE Sum IS NULL;";
             SqlConnection connection = connectToSQL();
             connection.Open();
@@ -254,6 +292,9 @@ namespace DAL
             command.ExecuteNonQuery();
         }
         public string getDaySum(string askedDate) {
+            /*
+                Returns a summary of sales occured in the askedDate. 
+            */
             string ans = "";
             String sql = $"SELECT COUNT(Sum) FROM sales WHERE Date LIKE '{askedDate}%'";
             SqlConnection connection = connectToSQL();
@@ -281,6 +322,10 @@ namespace DAL
         }
 
         public string getBestSellers() {
+            /*
+                Returns the all time best sellers. Uses the Portion table to SUM (grouped by Iid). 
+                Than, uses INNER JOIN on the Ingredients table (to look up) the name of the MAX SUM.
+            */
             string ans = "";
             String sql = "SELECT Iid, Name, TotalAmount FROM Ingredients INNER JOIN (SELECT Iid as bIid, TotalAmount FROM (SELECT Sum(amount) as TotalAmount, Iid as Iid FROM Portions WHERE Iid<=10 GROUP BY Iid) as a WHERE a.TotalAmount = (SELECT MAX(TotalAmount) FROM (SELECT Sum(amount) as TotalAmount, Iid as Iid FROM Portions WHERE Iid<=10 GROUP BY Iid) as b)) c ON Ingredients.Iid=c.bIid;";
             SqlConnection connection = connectToSQL();
